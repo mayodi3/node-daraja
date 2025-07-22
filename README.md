@@ -1,28 +1,30 @@
-````markdown
+
+-----
+
 # Safaricom Daraja NodeJS Library 🇰🇪
 
-Karibu! This is a simple, modern, and powerful Node.js library for connecting your application to the Safaricom Daraja API.
+Karibu\! This is a simple, modern, and powerful Node.js library for connecting your application to the Safaricom Daraja API.
 
 Our goal is to make M-Pesa integrations as easy as possible. We handle the complicated parts like getting tokens and generating passwords, so you can focus on building your amazing application.
 
-***
+-----
 
 ## ✨ Features
 
-* **Easy to Use**: We've simplified the official Daraja API so you can write less code.
-* **Promise-Based**: Uses modern `async/await` to make your code clean and easy to read.
-* **Automatic Token Handling**: The library automatically gets and renews your access token, so you don't have to worry about it expiring.
-* **Smart Automation**: Automatically generates the `Timestamp` and `Password` for STK Push and other requests.
-* **Full API Coverage**: Supports all major Daraja APIs, including:
-    * M-Pesa Express (STK Push) & Query
-    * Customer to Business (C2B)
-    * Business to Customer (B2C)
-    * Transaction Status
-    * Account Balance
-    * Reversals
-* **Sandbox & Production**: Easily switch between testing (sandbox) and live (production) modes.
+  * **Easy to Use**: We've simplified the official Daraja API so you can write less code.
+  * **Promise-Based**: Uses modern `async/await` to make your code clean and easy to read.
+  * **Automatic Token Handling**: The library automatically gets and renews your access token, so you don't have to worry about it expiring.
+  * **Smart Automation**: Automatically generates the `Timestamp` and `Password` for STK Push and other requests.
+  * **Full API Coverage**: Supports all major Daraja APIs, including:
+      * M-Pesa Express (STK Push) & Query
+      * Customer to Business (C2B)
+      * Business to Customer (B2C)
+      * Transaction Status
+      * Account Balance
+      * Reversals
+  * **Sandbox & Production**: Easily switch between testing (sandbox) and live (production) modes.
 
-***
+-----
 
 ## 📦 Installation
 
@@ -30,7 +32,7 @@ To get started, just install the package using npm:
 
 ```bash
 npm install safaricom-daraja-nodejs
-````
+```
 
 -----
 
@@ -54,14 +56,32 @@ const options = {
 const safaricom = new Safaricom(options);
 ```
 
-#### Why do we need this?
+-----
 
-These options tell the library who you are and how to talk to the Daraja API on your behalf.
+## 🤔 How It Works: The Magic Behind the Scenes
 
-  * `consumerKey` & `consumerSecret`: These are like your app's **username and password**.
-  * `shortCode`: This is your **Paybill or Till Number**.
-  * `passkey`, `initiatorName`, `securityCredential`: These are special credentials required for specific APIs. The library will tell you if you forget to add one when you need it.
-  * `environment`: This lets you switch between the free **sandbox for testing** and **production** when you are ready to go live.
+This library simplifies three key steps for you:
+
+#### 1\. Getting the Access Token
+
+Before making any request, the library automatically calls the Daraja API to get a new access token for you.
+
+  * It uses your **`consumerKey`** and **`consumerSecret`** for authentication.
+  * It stores this token and cleverly reuses it for future requests until it expires. You never have to manage tokens yourself.
+
+#### 2\. Creating the Timestamp
+
+For every transaction, Daraja requires a timestamp in a specific format (`YYYYMMDDHHMMSS`).
+
+  * The library automatically generates the **correct timestamp** for you the moment you make a request.
+
+#### 3\. Generating the Password
+
+For STK Push, the API needs a special password. This password is created by combining your `shortCode`, `passkey`, and the `timestamp`, and then encoding it in Base64.
+
+  * This library handles the entire process. It takes your details, gets the timestamp, and **generates the correct password** for every STK Push transaction.
+
+When you call a function like `safaricom.stkPush()`, the library performs all these steps in the background before sending the final, complete request to Safaricom.
 
 -----
 
@@ -79,7 +99,7 @@ async function startStkPush() {
     const response = await safaricom.stkPush({
       Amount: 1,
       PhoneNumber: '2547XXXXXXXX', // The customer's phone number
-      CallBackURL: '[https://mydomain.com/callback](https://mydomain.com/callback)',
+      CallBackURL: 'https://mydomain.com/callback',
       AccountReference: 'Order-123',
       TransactionDesc: 'Payment for an order'
     });
@@ -91,9 +111,6 @@ async function startStkPush() {
 
 startStkPush();
 ```
-
-> **Why is this simple?**
-> You only provide the important details. The library automatically creates the `Timestamp` and `Password` for you.
 
 ### 2\. M-Pesa Express Query
 
@@ -122,8 +139,8 @@ This tells M-Pesa where to send notifications when a customer pays you. You only
 async function registerUrls() {
   try {
     const response = await safaricom.c2bRegister({
-      ConfirmationURL: '[https://mydomain.com/confirmation](https://mydomain.com/confirmation)',
-      ValidationURL: '[https://mydomain.com/validation](https://mydomain.com/validation)'
+      ConfirmationURL: 'https://mydomain.com/confirmation',
+      ValidationURL: 'https://mydomain.com/validation'
     });
     console.log(response);
   } catch (error) {
@@ -145,8 +162,8 @@ async function sendToCustomer() {
       Amount: 100,
       PartyB: '2547XXXXXXXX', // The customer's phone number
       Remarks: 'Refund for Order-123',
-      QueueTimeOutURL: '[https://mydomain.com/b2c/queue](https://mydomain.com/b2c/queue)',
-      ResultURL: '[https://mydomain.com/b2c/result](https://mydomain.com/b2c/result)'
+      QueueTimeOutURL: 'https://mydomain.com/b2c/queue',
+      ResultURL: 'https://mydomain.com/b2c/result'
     });
     console.log(response);
   } catch (error) {
@@ -157,8 +174,6 @@ async function sendToCustomer() {
 sendToCustomer();
 ```
 
-> **Heads up\!** For this to work, you must provide the `initiatorName` and `securityCredential` in the main configuration.
-
 ### 5\. Transaction Status
 
 This checks the status of any M-Pesa transaction (like C2B or B2C).
@@ -168,8 +183,8 @@ async function checkTransaction() {
   try {
     const response = await safaricom.transactionStatus({
       TransactionID: 'Oxxxxxxxxxxx', // The M-Pesa Transaction ID
-      ResultURL: '[https://mydomain.com/transaction/result](https://mydomain.com/transaction/result)',
-      QueueTimeOutURL: '[https://mydomain.com/transaction/queue](https://mydomain.com/transaction/queue)'
+      ResultURL: 'https://mydomain.com/transaction/result',
+      QueueTimeOutURL: 'https://mydomain.com/transaction/queue'
     });
     console.log(response);
   } catch (error) {
@@ -188,8 +203,8 @@ This checks the balance of your M-Pesa shortcode.
 async function checkBalance() {
   try {
     const response = await safaricom.accountBalance({
-      ResultURL: '[https://mydomain.com/balance/result](https://mydomain.com/balance/result)',
-      QueueTimeOutURL: '[https://mydomain.com/balance/queue](https://mydomain.com/balance/queue)'
+      ResultURL: 'https://mydomain.com/balance/result',
+      QueueTimeOutURL: 'https://mydomain.com/balance/queue'
     });
     console.log(response);
   } catch (error) {
@@ -210,8 +225,8 @@ async function reverseTransaction() {
     const response = await safaricom.reversal({
       TransactionID: 'Oxxxxxxxxxxx',
       Amount: 100,
-      ResultURL: '[https://mydomain.com/reversal/result](https://mydomain.com/reversal/result)',
-      QueueTimeOutURL: '[https://mydomain.com/reversal/queue](https://mydomain.com/reversal/queue)',
+      ResultURL: 'https://mydomain.com/reversal/result',
+      QueueTimeOutURL: 'https://mydomain.com/reversal/queue',
       Remarks: 'Wrong transaction'
     });
     console.log(response);
@@ -242,6 +257,3 @@ try {
 This makes your application stable and helps you understand what went wrong if a payment fails.
 
 Happy Coding\! 🎉
-
-```
-```
