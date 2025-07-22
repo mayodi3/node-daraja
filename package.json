@@ -1,5 +1,5 @@
 {
-  "name": "node-daraja-sdk",
+  "name": "@mayodi3/node-daraja",
   "version": "1.0.0",
   "description": "A library for simplifying the use of daraja api",
   "main": "index.js",
@@ -9,6 +9,10 @@
   },
   "author": "Mayodi",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mayodi3/node-daraja"
+  },
   "dependencies": {
     "axios": "^1.10.0"
   },
