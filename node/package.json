@@ -1,0 +1,18 @@
+{
+  "name": "node-daraja-sdk",
+  "version": "1.0.0",
+  "description": "A library for simplifying the use of daraja api",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Mayodi",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.10.0"
+  },
+  "devDependencies": {
+    "jest": "^30.0.4"
+  }
+}
