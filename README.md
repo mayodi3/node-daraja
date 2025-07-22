@@ -31,7 +31,7 @@ Our goal is to make M-Pesa integrations as easy as possible. We handle the compl
 To get started, just install the package using npm:
 
 ```bash
-npm install safaricom-daraja-nodejs
+npm i @mayodi3/node-daraja
 ```
 
 -----
